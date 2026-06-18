@@ -137,11 +137,38 @@
 
 # driver.quit()
 from selenium import webdriver
+# from selenium.webdriver.chrome.service import Service
+# from webdriver_manager.chrome import ChromeDriverManager
+# from selenium.webdriver.common.by import By
+# from selenium.webdriver.support.ui import WebDriverWait
+# from selenium.webdriver.support import expected_conditions as EC
+
+# driver = webdriver.Chrome(
+#     service=Service(ChromeDriverManager().install())
+# )
+
+# driver.get("https://www.flipkart.com/search?q=perfume+under+1500")
+
+# WebDriverWait(driver, 20).until(
+#     EC.presence_of_element_located((By.CSS_SELECTOR, "div[data-id]"))
+# )
+
+# products = driver.find_elements(By.CSS_SELECTOR, "div[data-id]")
+
+# print("Products Found:", len(products))
+
+# for p in products[:5]:
+#     print(p.text)
+#     print("=" * 50)
+
+# driver.quit()
+from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import pandas as pd
 
 driver = webdriver.Chrome(
     service=Service(ChromeDriverManager().install())
@@ -157,8 +184,19 @@ products = driver.find_elements(By.CSS_SELECTOR, "div[data-id]")
 
 print("Products Found:", len(products))
 
-for p in products[:5]:
-    print(p.text)
-    print("=" * 50)
+product_data = []
+
+for p in products:
+    product_data.append({
+        "Product_Details": p.text
+    })
+
+df = pd.DataFrame(product_data)
+
+csv_path = r"F:\Blackbox\web scraping\flipkart_perfumes_under_1500.csv"
+
+df.to_csv(csv_path, index=False, encoding="utf-8-sig")
+
+print(f"\nCSV saved successfully at:\n{csv_path}")
 
 driver.quit()
